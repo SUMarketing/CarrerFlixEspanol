@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerFlix - Elige Tu Futuro Profesional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #141414;
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            color: #e50914;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin: 40px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-selection {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+            animation: fadeIn 0.5s ease-in;
+            flex-direction: column;
+        }
+
+        .selection-title {
+            font-size: 42px;
+            margin-bottom: 60px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #4c51bf 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+
+        .profile {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .profile:hover {
+            transform: translateY(-10px) scale(1.05);
+        }
+
+        .profile-avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+            transition: all 0.3s ease;
+            background: #141414;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+        }
+
+        .profile:hover .profile-avatar {
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.5);
+            transform: scale(1.05);
+        }
+
+        .hover-hint {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .profile:hover .hover-hint {
+            color: #999;
+        }
+
+        .home-screen {
+            display: none;
+            min-height: 100vh;
+            background: #141414;
+            padding-top: 100px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .hero-section {
+            padding: 0 40px 40px;
+            background: linear-gradient(to bottom, transparent 0%, #141414 100%);
+        }
+
+        .section-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .careers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 0 40px;
+            margin-bottom: 80px;
+        }
+
+        .career-card {
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .career-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+            z-index: 10;
+        }
+
+        .career-thumbnail {
+            width: 100%;
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        .career-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(229, 9, 20, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .career-card:hover .play-button {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-button::before {
+            content: '\25B6';
+            color: white;
+            font-size: 24px;
+            margin-left: 4px;
+        }
+
+        .career-info {
+            padding: 15px;
+        }
+
+        .career-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .career-description {
+            font-size: 14px;
+            color: #999;
+            line-height: 1.4;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #e50914, #ff4444);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .video-container {
+            width: 90%;
+            max-width: 1000px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+            aspect-ratio: 16/9;
+        }
+
+        .video-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(20,20,20,0.9), transparent);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .video-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .close-button {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: rgba(229, 9, 20, 0.9);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .back-button:hover {
+            background: #e50914;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(229, 9, 20, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 32px;
+                margin: 20px;
+            }
+            
+            .selection-title {
+                font-size: 28px;
+                margin-bottom: 40px;
+                padding: 0 20px;
+            }
+            
+            .profile-avatar {
+                width: 160px;
+                height: 160px;
+                font-size: 80px;
+            }
+            
+            .careers-grid {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo" onclick="goToProfileSelection()">CareerFlix</div>
+
+    <div class="profile-selection" id="profileSelection">
+        <h1 class="selection-title">¿Qué quieres ser de mayor?</h1>
+        <div class="profile" onclick="startExploring()">
+            <div class="profile-avatar">
+                <svg width="200" height="200" viewBox="0 0 32 32" style="width: 100%; height: 100%;">
+                    <rect width="32" height="32" fill="#71b3d6"/>
+                    <rect x="10" y="6" width="12" height="3" fill="#2c2c2c"/>
+                    <rect x="9" y="8" width="14" height="3" fill="#2c2c2c"/>
+                    <rect x="8" y="10" width="16" height="2" fill="#2c2c2c"/>
+                    <rect x="6" y="11" width="3" height="5" fill="#4a4a4a"/>
+                    <rect x="23" y="11" width="3" height="5" fill="#4a4a4a"/>
+                    <rect x="7" y="10" width="18" height="1" fill="#4a4a4a"/>
+                    <rect x="11" y="11" width="10" height="8" fill="#f4c2a1"/>
+                    <rect x="10" y="13" width="12" height="6" fill="#f4c2a1"/>
+                    <rect x="12" y="14" width="2" height="1" fill="#2c2c2c"/>
+                    <rect x="18" y="14" width="2" height="1" fill="#2c2c2c"/>
+                    <rect x="14" y="17" width="4" height="1" fill="#c97a63"/>
+                    <rect x="10" y="19" width="12" height="2" fill="#f4c2a1"/>
+                    <rect x="8" y="21" width="16" height="8" fill="#ffffff"/>
+                    <rect x="8" y="23" width="1" height="4" fill="#e0e0e0"/>
+                    <rect x="23" y="23" width="1" height="4" fill="#e0e0e0"/>
+                    <rect x="6" y="22" width="3" height="6" fill="#f4c2a1"/>
+                    <rect x="23" y="22" width="3" height="6" fill="#f4c2a1"/>
+                </svg>
+            </div>
+            <p class="hover-hint">Haz clic para comenzar</p>
+        </div>
+    </div>
+
+    <div class="home-screen" id="homeScreen">
+        <div class="hero-section">
+            <h1 class="section-title">🎬 Las carreras de tus sueños... antes de que llegue la IA</h1>
+            <p style="color: #999; font-size: 18px; margin-bottom: 30px;">
+                Descubre cómo la inteligencia artificial está transformando cada profesión
+            </p>
+        </div>
+        
+        <div class="careers-grid">
+            <div class="career-card" onclick="playTrailer('medico')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <span style="position: relative; z-index: 1;">&#127973;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Médico</h3>
+                    <p class="career-description">Diagnósticos perfectos en milisegundos. IA que salva vidas 24/7.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('abogado')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <span style="position: relative; z-index: 1;">&#9878;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Abogado</h3>
+                    <p class="career-description">Miles de precedentes analizados instantáneamente.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('influencer')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <span style="position: relative; z-index: 1;">&#128241;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Influencer</h3>
+                    <p class="career-description">Avatares digitales perfectos que nunca duermen.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('manager')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%);">
+                    <span style="position: relative; z-index: 1;">&#128188;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Manager</h3>
+                    <p class="career-description">Decisiones estratégicas basadas en miles de millones de datos.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('profesor')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);">
+                    <span style="position: relative; z-index: 1;">&#128104;&#8205;&#127891;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Profesor</h3>
+                    <p class="career-description">Lecciones personalizadas para cada estudiante.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('piloto')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <span style="position: relative; z-index: 1;">&#9992;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Piloto</h3>
+                    <p class="career-description">Vuelos autónomos más seguros que cualquier humano.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('chef')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #f8b500 0%, #fceabb 100%);">
+                    <span style="position: relative; z-index: 1;">&#128104;&#8205;&#127859;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Chef</h3>
+                    <p class="career-description">Recetas perfectas creadas por algoritmos gourmet.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('arquitecto')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                    <span style="position: relative; z-index: 1;">&#127959;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Arquitecto</h3>
+                    <p class="career-description">Edificios diseñados en segundos, perfectos al milímetro.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('periodista')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                    <span style="position: relative; z-index: 1;">&#128240;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Periodista</h3>
+                    <p class="career-description">Artículos escritos en tiempo real sobre cada evento.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('musico')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);">
+                    <span style="position: relative; z-index: 1;">&#127925;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Músico</h3>
+                    <p class="career-description">Sinfonías compuestas por redes neuronales creativas.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('psicologo')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);">
+                    <span style="position: relative; z-index: 1;">&#129504;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Psicólogo</h3>
+                    <p class="career-description">Terapia disponible 24/7 sin juicios.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+            
+            <div class="career-card" onclick="playTrailer('astronauta')">
+                <div class="career-thumbnail" style="background: linear-gradient(135deg, #13547a 0%, #80d0c7 100%);">
+                    <span style="position: relative; z-index: 1;">&#128640;</span>
+                    <div class="play-button"></div>
+                </div>
+                <div class="career-info">
+                    <h3 class="career-title">Astronauta</h3>
+                    <p class="career-description">Robots que exploran el espacio sin límites humanos.</p>
+                    <span class="ai-badge">IA LISTA</span>
+                </div>
+            </div>
+        </div>
+        
+        <button class="back-button" onclick="goToProfileSelection()">← Volver Atrás</button>
+    </div>
+
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <div class="video-header">
+                <h2 class="video-title" id="videoTitle">Tráiler</h2>
+                <button class="close-button" onclick="closeVideo()">x</button>
+            </div>
+            <div id="videoContent" style="width: 100%; height: 560px; background: #000;"></div>
+        </div>
+    </div>
+
+    <script>
+        const careers = {
+            medico: {
+                title: 'Médico - El Futuro de la Medicina',
+                vimeoId: 'INSERTAR_ID_VIDEO'
+            },
+            abogado: {
+                title: 'Abogado - La Justicia Algorítmica',
+                vimeoId: '1128772853'
+            },
+            influencer: {
+                title: 'Influencer - La Celebridad Digital',
+                vimeoId: '1128771219'
+            },
+            manager: {
+                title: 'Manager - Liderazgo Artificial',
+                vimeoId: '1128771966'
+            },
+            profesor: {
+                title: 'Profesor - La Educacion Personalizada',
+                vimeoId: 'INSERTAR_ID_VIDEO'
+            },
+            piloto: {
+                title: 'Piloto - El Vuelo Autonomo',
+                vimeoId: 'INSERTAR_ID_VIDEO'
+            },
+            chef: {
+                title: 'Chef - La Cocina Algoritmica',
+                vimeoId: 'INSERTAR_ID_VIDEO'
+            },
+            arquitecto: {
+                title: 'Arquitecto - Diseno Computacional',
+                vimeoId: 'INSERTAR_ID_VIDEO'
+            },
+            periodista: {
+                title: 'Periodista - Noticias Instantaneas',
+                vimeoId: 'INSERTAR_ID_VIDEO'
+            },
+            musico: {
+                title: 'Musico - Melodias Generadas',
+                vimeoId: 'INSERTAR_ID_VIDEO'
+            },
+            psicologo: {
+                title: 'Psicologo - Terapia Digital',
+                vimeoId: 'INSERTAR_ID_VIDEO'
+            },
+            astronauta: {
+                title: 'Astronauta - Exploradores Roboticos',
+                vimeoId: 'INSERTAR_ID_VIDEO'
+            }
+        };
+
+        function startExploring() {
+            const profileSelection = document.getElementById('profileSelection');
+            const homeScreen = document.getElementById('homeScreen');
+            
+            profileSelection.style.display = 'none';
+            homeScreen.style.display = 'block';
+            
+            const cards = document.querySelectorAll('.career-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = (index * 0.05) + 's';
+            });
+        }
+
+        function goToProfileSelection() {
+            document.getElementById('profileSelection').style.display = 'flex';
+            document.getElementById('homeScreen').style.display = 'none';
+            closeVideo();
+        }
+
+        function playTrailer(career) {
+            const modal = document.getElementById('videoModal');
+            const title = document.getElementById('videoTitle');
+            const videoContent = document.getElementById('videoContent');
+            
+            modal.style.display = 'flex';
+            title.textContent = careers[career].title;
+            
+            if (careers[career].vimeoId && careers[career].vimeoId !== 'INSERTAR_ID_VIDEO') {
+                videoContent.innerHTML = '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/' + careers[career].vimeoId + '?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" allowfullscreen></iframe></div>';
+            } else {
+                videoContent.innerHTML = '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #666;"><div style="font-size: 80px; margin-bottom: 20px; opacity: 0.5;">&#127916;</div><p>Video proximamente...</p></div>';
+            }
+        }
+
+        function closeVideo() {
+            const modal = document.getElementById('videoModal');
+            const videoContent = document.getElementById('videoContent');
+            videoContent.innerHTML = '';
+            modal.style.display = 'none';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideo();
+            }
+        });
+
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === document.getElementById('videoModal')) {
+                closeVideo();
+            }
+        });
+    </script>
+</body>
+</html>
